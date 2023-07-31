@@ -8,11 +8,6 @@
 // include bluetooth library
 #include <ArduinoBLE.h>
 
-// Set the input pins the flex sensors are connected to
-
-int fullbent[5] = {161, 234, 218, 202, 14};
-int straight[5] = {348, 572, 488, 402, 2};
-
 // set the UUID of the BLE service
 BLEService FlexService("19B10000-E8F2-537E-4F6C-D104768A1214");
 
@@ -69,8 +64,8 @@ void loop()
     {
 
         // while the central is still connected to peripheral:
-        step = 10;
-        a = 10;
+        int step = 10;
+        int a = 10;
         while (central.connected())
         {
             a = a + step;
@@ -87,7 +82,7 @@ void loop()
             sendfixedvalue(2, Flex3, "Flex1", a);
             sendfixedvalue(3, Flex4, "Flex1", a);
             sendfixedvalue(4, Flex5, "Flex1", a);
-            dealy(500)
+            delay(500);
         }
 
         // then loop back round and listen for a connection from a BLE central device
@@ -95,21 +90,6 @@ void loop()
 }
 
 // Other functions called by the setup and loop
-
-// send the value of the amount you want the finger to fliex
-void sendflexvalue(int finger, BLEShortCharacteristic characteristic, String name, int straight, int bent)
-{
-
-    int Flexvalue = mapflex(finger, analogRead(finger_pins[finger]));
-    // BLE can only take a value up to 255 so check if its too high
-    if (Flexvalue > 255)
-    {
-        Flexvalue = 255;
-    }
-    // write the flex sensort value to the BLE characteristic
-    characteristic.writeValue(Flexvalue);
-    delay(10);
-}
 
 void sendfixedvalue(int finger, BLEShortCharacteristic characteristic, String name, int value)
 {
